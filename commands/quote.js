@@ -1,5 +1,5 @@
 const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
-const { readServerChannels } = require('../readchannels.js');
+const { readServerChannels } = require('../filemanagement.js');
 const dotenv = require('dotenv');
 
 dotenv.config();

@@ -5,6 +5,8 @@ const { frontHandler } = require('./commands/front.js');
 const { meowHandler } = require('./meowhandler.js');
 const { randomQuote } = require('./commands/quote.js');
 const { helpMessage } = require('./commands/help.js');
+const { generateLeaderboard } = require('./commands/leaderboard.js');
+const { updateCacheWhileRunning } = require('./filemanagement.js');
 
 const fs = require('node:fs');
 const dotenv = require('dotenv');
@@ -38,30 +40,6 @@ commandList.forEach(file => {
 		console.log(`\x1b[33m${file} doesnt seem to have a 'data' or 'execute' property >_<;; gomen,,\x1b[0m`);
 	}
 });
-
-function formatMessage(msg) {
-	fireReacts = msg.reactions.resolve('🔥')?.count || 0; //if we can't resolve it, it just gets set back to 0
-	tomatoReacts = msg.reactions.resolve('🍅')?.count || 0;
-	sobReacts = msg.reactions.resolve('😭')?.count || 0;
-
-	let attachUrl;
-	if (msg.attachments.first()) {
-		attachUrl = msg.attachments.first().attachment;
-	}
-	let formattedMessage = {
-		channelId: msg.channelId,
-		guildId: msg.guildId,
-		id: msg.id,
-		authorId: msg.author.id,
-		content: msg.content,
-		attachmentUrl: attachUrl,
-		fireReacts,
-		tomatoReacts,
-		sobReacts
-	};
-
-	return formattedMessage;
-}
 
 async function storeServerMessages(curGuildId, guildName) {
 	/* while caching the server info works fine, this means that the bot has to reload the entire cache whenever it goes offline */
@@ -105,66 +83,6 @@ async function storeServerMessages(curGuildId, guildName) {
 	}
 }
 
-var messagesToWrite = {};
-
-function updateCacheWhileRunning(message, isReaction, emoji) {
-	let fileName = `./messagecache/${message.guild.name}/${message.channel.id}.json`;
-	if (!messagesToWrite[message.channel.id]) { //this means old messages won't have reactions updated for now, but i'm okay with this for tonight
-		messagesToWrite[message.channel.id] = [formatMessage(message)];
-		setTimeout(() => {
-			let currentChannelData;
-			try {
-				currentChannelData = JSON.parse(fs.readFileSync(fileName));
-			} catch {
-				currentChannelData = [];
-			}
-			messagesToWrite[message.channel.id].forEach(message => {
-				let isDuplicate = false
-				for (let i = 0; i < currentChannelData.length; i++) {
-					if (currentChannelData[i].id == message.id) {
-						currentChannelData[i] = message;
-						isDuplicate = true;
-						console.log(`	found a duplicate, so i'm updating an old reaction~ ehe~`);
-					}
-				}
-				if (!isDuplicate) {
-					currentChannelData.push(message);
-				}
-			});
-
-			let guildDirectory = `./messagecache/${message.guild.name}`;
-			if (!fs.existsSync(guildDirectory)) {
-				fs.mkdirSync(guildDirectory, { recursive: true }); //if the server directory doesn't already exist, we wanna make it :p
-			}
-			fs.writeFile(fileName, JSON.stringify(currentChannelData, null, 2), (err) => {
-				if (err) throw err;
-				console.log(`updated cache for ${message.guild.name}'s #${message.channel.name} with new messages >w<`);
-			});
-			delete messagesToWrite[message.channel.id]; //removes the channel from messagesToWrite, effectively resetting it
-		}, process.env.CACHE_WRITE_FREQUENCY? parseInt(process.env.CACHE_WRITE_FREQUENCY) : 60000); //runs every 60 seconds by default
-	} else {
-		if (isReaction) {
-			messagesToWrite[message.channel.id].forEach(entry => {
-				if (entry.id == message.id) {
-					switch (emoji) {
-						case '🔥':
-							entry.fireReacts++;
-							break;
-						case '🍅':
-							entry.tomatoReacts++;
-							break;
-						case '😭':
-							entry.sobReacts++;
-							break;
-					}
-				}
-			});
-		} else {
-			messagesToWrite[message.channel.id].push(formatMessage(message));
-		}
-	}
-}
-
 client.once(Events.ClientReady, readyClient => {
   console.log(`poke poke,, logged in on ${readyClient.user.tag} >w< nya~?`);
 });
@@ -187,7 +105,7 @@ client.on(Events.MessageCreate, async message => {
 
 	/* meowing back >w< */
 	//works in a different file >_<
-	meowHandler(client, message);
+	meowHandler(message);
 
 	/* quotes!! */
 	//works in a different file >_<
@@ -196,6 +114,17 @@ client.on(Events.MessageCreate, async message => {
 			randomQuote(message, false);
 		} catch(err) {
 			console.log(`\x1b[33msomething went wrong executing ?quote,, >_<;; \x1b[0m`);
+			console.log(err);
+		}
+	}
+
+	/* meow leaderboard :00 */
+	//works in a different file >_<
+	if (message.content.startsWith('?leaderboard')) {
+		try {
+			generateLeaderboard(message, false);
+		} catch(err) {
+			console.log(`\x1b[33msomething went wrong executing ?leaderboard,, >_<;; \x1b[0m`);
 			console.log(err);
 		}
 	}

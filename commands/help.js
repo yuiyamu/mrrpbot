@@ -3,16 +3,20 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+const defaultColour = process.env.EMBED_COLOUR ?? '#7D6D78';
+
 function helpMessage(channel, isSlash) {
     let helpEmbed = new EmbedBuilder()
     .setTitle('hihiii!! :D')
     .setThumbnail('https://cdn.discordapp.com/avatars/1340778139886031008/56508c96af2eb1afa323d3b87e3e7f1d') //bot pfp
-    .setColor(process.env.EMBED_COLOUR ?? '#7D6D78')
+    .setColor(defaultColour)
     .addFields(
         {name: '?help', value: 'displays this message!! :3 \nthese are all the commands i know >_<'},
         {name: '?front ``name``', value: 'displays whos fronting in a system, using pluralkit :3 \ncan accept a username, server nickname, or @ing someone'},
-        {name: '?quote ``unfiltered?`` ``name?``', value: 'pulls a random quote from the current server~ >w<\n``unfiltered`` searches for messages with/without 🔥 reacts :3\n``name`` is the name of the person you want to quote~ >w<\nboth of these can be blank, tho~'}
+        {name: '?quote ``unfiltered?`` ``name?``', value: 'pulls a random quote from the current server~ >w<\n``unfiltered`` searches for messages with/without 🔥 reacts :3\n``name`` is the name of the person you want to quote~ >w<\nboth of these can be blank, tho~'},
+        {name: "?leaderboard", value: "displays a leaderboard showing the kitties that have meowed the most in this server >.<"}
     )
+    .setFooter({text: 'created by yurukyan△ • yuru.ca'});
     
     let returnText = { embeds: [helpEmbed] }
     if (!isSlash) {
