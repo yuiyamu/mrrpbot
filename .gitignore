@@ -2,5 +2,7 @@
 /messagecache
 /usercache
 
+meow.db
+
 deployslash.js
 .env
