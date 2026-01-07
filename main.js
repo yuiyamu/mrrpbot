@@ -37,7 +37,7 @@ commandList.forEach(file => {
 	if ('data' in command && 'execute' in command) { //making sure that it has a data and execute property (needed for slash commands)
 		client.commands.set(command.data.name, command); //if so, we pass it along to discord.js~
 	} else {
-		console.log(`\x1b[33m${file} doesnt seem to have a 'data' or 'execute' property >_<;; gomen,,\x1b[0m`);
+		console.error(`\x1b[33m${file} doesnt seem to have a 'data' or 'execute' property >_<;; gomen,,\x1b[0m`);
 	}
 });
 
@@ -97,7 +97,7 @@ async function storeServerMessages(curGuildId, guildName) {
 				console.log(`wrote ${messages.length} messages to ${channel.guild.name}'s #${channel.name} in database >w<`);
 			}
 		} catch (err) {
-			console.log(`\x1b[33mfetching messages from ${channel.guild.name}'s #${channel.name} failed, likely due to missing access >_<;; gomen,,\x1b[0m`);
+			console.error(`\x1b[33mfetching messages from ${channel.guild.name}'s #${channel.name} failed, likely due to missing access >_<;; gomen,,\x1b[0m`);
 			if (err) console.log(err);
 		}
 	}
@@ -118,8 +118,7 @@ client.on(Events.MessageCreate, async message => {
 		try {
 			frontHandler(message);
 		} catch(err) {
-			console.log(`\x1b[33msomething went wrong executing ?front,, >_<;; \x1b[0m`);
-			console.log(err);
+			console.error(`\x1b[33msomething went wrong executing ?front,, >_<;; \x1b[0m`, err);
 		}
 	}
 
@@ -133,8 +132,7 @@ client.on(Events.MessageCreate, async message => {
 		try {
 			randomQuote(message, false);
 		} catch(err) {
-			console.log(`\x1b[33msomething went wrong executing ?quote,, >_<;; \x1b[0m`);
-			console.log(err);
+			console.error(`\x1b[33msomething went wrong executing ?quote,, >_<;; \x1b[0m`, err);
 		}
 	}
 
@@ -144,8 +142,7 @@ client.on(Events.MessageCreate, async message => {
 		try {
 			generateLeaderboard(message, false);
 		} catch(err) {
-			console.log(`\x1b[33msomething went wrong executing ?leaderboard,, >_<;; \x1b[0m`);
-			console.log(err);
+			console.log(`\x1b[33msomething went wrong executing ?leaderboard,, >_<;; \x1b[0m`, err);
 		}
 	}
 

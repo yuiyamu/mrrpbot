@@ -11,7 +11,7 @@ commandList.forEach(file => {
 	if ('data' in command && 'execute' in command) { //making sure that it has a data and execute property (needed for slash commands)
         commands.push(command.data.toJSON());
 	} else {
-		console.log(`\x1b[33m${file} doesnt seem to have a 'data' or 'execute' property >_<;; gomen,,\x1b[0m`);
+		console.error(`\x1b[33m${file} doesnt seem to have a 'data' or 'execute' property >_<;; gomen,,\x1b[0m`);
 	}
 });
 
@@ -25,7 +25,6 @@ const rest = new REST().setToken(process.env.TOKEN); //rest api init
 		);
 		console.log(`succesfully refreshed ${data.length} slash commands~!! :3~`);
 	} catch (error) {
-		// And of course, make sure you catch and log any errors!
 		console.error(`\x1b[33msomething happened while refreshing slash commands,,: \x1b[0m${error}`);
 	}
 })();

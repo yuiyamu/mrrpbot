@@ -1,4 +1,3 @@
-const fs = require('fs');
 const Database = require('better-sqlite3');
 
 // Initialize the meowtabase
@@ -101,7 +100,7 @@ function updateCacheWhileRunning(message, isReaction, emoji) {
                 transaction(messagesToWrite[message.channel.id], message.guild.name);
                 console.log(`updated cache for ${message.guild.name}'s #${message.channel.name} with new messages >w<`);
             } catch (err) {
-                console.error('Error writing messages to database:', err);
+                console.error('\x1b[33me-error occured writing message data to the database >.<,,', err);
             }
             
             delete messagesToWrite[message.channel.id]; //removes the channel from messagesToWrite, effectively resetting it
@@ -205,7 +204,7 @@ function readServerChannels(guildName, filterType, filterUser) {
             }
         });
     } catch (err) {
-        console.error('Error reading messages from database:', err);
+        console.error('\x1b[33me-error occured reading messages from the database >.<,,', err);
     }
     
     return messagesList;
@@ -218,7 +217,7 @@ function addToMeowDb(authorId, serverName, timestamp) {
         const insert = db.prepare('INSERT INTO meows (user, server_name, timestamp) VALUES (?, ?, ?)');
         insert.run(authorId, serverName, timestamp);
     } catch (err) {
-        console.error('Error adding meow to database:', err);
+        console.error('\x1b[33me-error occured adding meow to the database >.<,,', err);
     }
 }
 
@@ -240,7 +239,7 @@ function getLeaderboardData(serverName) {
             totalCount: row.totalCount
         }));
     } catch (err) {
-        console.error('Error getting leaderboard data:', err);
+        console.error('\x1b[33me-error occured getting leaderboard data from the database >.<,,', err);
         return [];
     }
 }
