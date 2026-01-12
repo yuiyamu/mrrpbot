@@ -2,7 +2,9 @@ FROM node:20
 
 WORKDIR /usr/local/mrrpbot
 
-COPY . .
+COPY package*.json ./
 RUN npm install
+
+COPY . .
 
 CMD ["node", "main.js"]
