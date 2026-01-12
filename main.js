@@ -6,7 +6,7 @@ const { meowHandler } = require('./meowhandler.js');
 const { randomQuote } = require('./commands/quote.js');
 const { helpMessage } = require('./commands/help.js');
 const { generateLeaderboard } = require('./commands/leaderboard.js');
-const { updateCacheWhileRunning, formatMessage, getMeowDb } = require('./filemanagement.js');
+const { updateCacheWhileRunning, formatMessage, getMeowDb, manualMeowSet } = require('./filemanagement.js');
 
 const fs = require('node:fs');
 const dotenv = require('dotenv');
@@ -146,6 +146,14 @@ client.on(Events.MessageCreate, async message => {
 		}
 	}
 
+	//in case we need to, we can set the leaderboard :p
+	if (message.content.startsWith('?setmeow') && message.author.id === "245588170903781377") {
+		let params = message.content.split('?setmeow ')[1].split(' '); //gets us an array with [user, num]
+		let user = params[0];
+		let meowNum = parseInt(params[1]);
+		return message.channel.send(manualMeowSet(user, message.guild.name, meowNum));
+	}
+
 	/* help!! >_<;; */
 	//works in a different file >_<
 	if (message.content == '?help') {
@@ -167,7 +175,7 @@ client.on(Events.MessageCreate, async message => {
 		}
 	}
 
-	if (cacheRestartPrimed && message.content == "yes" && (message.author.id == '226885796739678229' || message.author.id == '245588170903781377')) {
+	if (cacheRestartPrimed && message.content === "yes" && message.author.id === '245588170903781377') {
 		message.channel.send('sure thing!! h-here goes nothing.. >_<');
 		let cacheStartTime = performance.now();
 		await storeServerMessages(message.guildId, message.guild.name);

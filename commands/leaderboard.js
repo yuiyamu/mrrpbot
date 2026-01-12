@@ -29,7 +29,6 @@ function generateLeaderboard(userInteraction, isSlash) {
         leaderboardFields.push({name: `#${i+1} | ${meowDb[i].user}`, value: `${meowDb[i].totalCount} ${meowDb[i].totalCount === 1? "meow" : "meows"}`})
     }
 
-
     let leaderboardEmbed = new EmbedBuilder()
     .setTitle('meow leaderboard:')
     .setThumbnail('https://cdn.discordapp.com/avatars/1340778139886031008/56508c96af2eb1afa323d3b87e3e7f1d') //bot pfp

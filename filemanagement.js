@@ -1,10 +1,11 @@
 const Database = require('better-sqlite3');
+const fs = require('fs');
 
 // Initialize the meowtabase
 let meowDb = null;
 function getMeowDb() {
     if (!meowDb) {
-        const dbPath = './meow.db';
+        const dbPath = './mrrp-db/meow.db'; //symlinked to ../mrrp-cache
         meowDb = new Database(dbPath);
         
         // Create the meow table if it doesn't exist
@@ -16,6 +17,14 @@ function getMeowDb() {
                 timestamp INTEGER NOT NULL
             );
             CREATE INDEX IF NOT EXISTS idx_user_server ON meows(user, server_name);
+
+            CREATE TABLE IF NOT EXISTS meow_counts (
+                user TEXT NOT NULL,
+                server_name TEXT NOT NULL,
+                count INTEGER NOT NULL DEFAULT 0,
+                PRIMARY KEY (user, server_name)
+            );
+            CREATE INDEX IF NOT EXISTS idx_user_server ON meow_counts(user, server_name);
             
             CREATE TABLE IF NOT EXISTS messages (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -214,10 +223,29 @@ function addToMeowDb(authorId, serverName, timestamp) {
     const db = getMeowDb();
     
     try {
-        const insert = db.prepare('INSERT INTO meows (user, server_name, timestamp) VALUES (?, ?, ?)');
-        insert.run(authorId, serverName, timestamp);
+        const insertMeows = db.prepare(`
+            INSERT INTO meows (user, server_name, timestamp) VALUES (?, ?, ?)`);
+        insertMeows.run(authorId, serverName, timestamp);
+
+        const insertMeowCounts = db.prepare(`
+            INSERT INTO meow_counts (user, server_name, count) VALUES (?, ?, 1) ON CONFLICT(user, server_name) DO UPDATE SET count = count + 1`);
+        insertMeowCounts.run(authorId, serverName);
     } catch (err) {
         console.error('\x1b[33me-error occured adding meow to the database >.<,,', err);
+    }
+}
+
+function manualMeowSet(authorId, serverName, meowNum) {
+    const db = getMeowDb();
+
+    try {
+        const insert = db.prepare('UPDATE meow_counts SET count = ? WHERE user = ? AND server_name = ?;');
+        insert.run(meowNum, authorId, serverName);
+        return `updated ${authorId}'s meows to ${meowNum}~!! :3`;
+    } catch (err) {
+        let errmsg = `e-error occured manually setting meows in the database >.<,,`;
+        console.error('\x1b[33m'+errmsg, err);
+        return errmsg;
     }
 }
 
@@ -226,17 +254,17 @@ function getLeaderboardData(serverName) {
     
     try {
         const query = db.prepare(`
-            SELECT user, COUNT(*) as totalCount
-            FROM meows
+            SELECT user, count
+            FROM meow_counts
             WHERE server_name = ?
             GROUP BY user
-            ORDER BY totalCount DESC
+            ORDER BY count DESC
         `);
         
         const results = query.all(serverName);
         return results.map(row => ({
             user: row.user,
-            totalCount: row.totalCount
+            totalCount: row.count
         }));
     } catch (err) {
         console.error('\x1b[33me-error occured getting leaderboard data from the database >.<,,', err);
@@ -245,5 +273,5 @@ function getLeaderboardData(serverName) {
 }
 
 module.exports = {
-    readServerChannels, addToMeowDb, updateCacheWhileRunning, getLeaderboardData, formatMessage, getMeowDb
+    readServerChannels, addToMeowDb, updateCacheWhileRunning, getLeaderboardData, formatMessage, getMeowDb, manualMeowSet
 }
