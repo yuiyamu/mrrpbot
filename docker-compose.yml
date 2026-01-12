@@ -4,5 +4,5 @@ services:
     env_file:
       - .env
     volumes:
-      - ../mrrp-cache:/usr/local/mrrpbot/messagecache
+      - ../mrrp-cache:/usr/local/mrrpbot/mrrp-db
     restart: unless-stopped
