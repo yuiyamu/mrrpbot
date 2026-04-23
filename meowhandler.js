@@ -9,8 +9,8 @@ var wonderlist = [`wo-wondahoyy..~`, `wonderhoy~!!`, `wondahoyyy!!! >_<`, `wonde
 //these are the things that the bot actually matches to, in arrays of regexes
 var wanMatch = [/^(w+o{2,}f+)/, /^(bark)+/, /^(a+r+f+)/, /^(w?r+u+f+)/, /^(wan)+\b/, /^(awru?f+)/, /^(b(w?+)o{2,}f+)/, /^(w(r?+)u+f+)/];
 var yellingWanMatch = [/^(W+O{2,}F+)/, /^(BARK)+/, /^(A+R+F+)/, /^(W?R+U+F+)/, /^(WAN)+\b/, /^(AWRU?F+)/, /^(B(W?+)O{2,}F+)/, /^(W(R?+)U+F+)/];
-var nyaMatch = [/^(m(r{2,})p)/, /^(m(e+)(o+)w)/, /^(p(u+)(r{2,}))/, /^(m(e+)(w+))/, /^(n(y+)(a+)+)/, /^((ps+))/, /^(m(i+)(a+)(u+))/, /^(m(y+)(a+)(u+))/];
-var yellingNyaMatch = [/^(M(R{2,})P)/, /^(M(E+)(O+)W)/, /^(P(U+)(R{2,}))/, /^(M(E+)(W+))/, /^(N(Y+)(A+))/, /^((PS+))/, /^(M(I+)(A+)(U+))/,  /^(M(Y+)(A+)(U+))/];
+var nyaMatch = [/^(m(r{2,})p)/, /^((m+)(r*)(e+)(o+)(w+))/, /^(p(u+)(r{2,}))/, /^(m(e+)(w+))/, /^(n(y+)(a+)+)/, /^((ps+))/, /^(m(i+)(a+)(u+))/, /^(m(y+)(a+)(u+))/];
+var yellingNyaMatch = [/^(M(R{2,})P)/, /^((M+)(R*)(E+)(O+)(W+))/, /^(P(U+)(R{2,}))/, /^(M(E+)(W+))/, /^(N(Y+)(A+))/, /^((PS+))/, /^(M(I+)(A+)(U+))/,  /^(M(Y+)(A+)(U+))/];
 
 function validMeow(isOtherAnimal, message) {
 	let meowBack = nyaList[Math.floor(Math.random()*nyaList.length)]; //random selection of meow, but is sometimes the same (i think its fine tho :3)
