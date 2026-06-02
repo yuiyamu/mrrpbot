@@ -2,6 +2,7 @@ const { addToMeowDb } = require('./filemanagement.js');
 
 //these are a list of things the bot can respond with, not actually things that it's searching for. see regex expression below
 var nyaList = ['mrrp', 'mrrrp', 'mrrrrp', 'mrrrrrp', 'meow', 'nya', 'nyaa', 'nyaaa', 'mrow', 'mrrow', 'mrrrow', 'mrrrrow', 'mew', 'purr', 'purrr', 'purrrr', 'purrrrr', 'miau', 'miauu', 'myau', 'myauu']; 
+var wanList = ["woof","bark", "bau", "bau bau", "arf", "wruff", "wan", "awruff", "bwoof"];
 var nyaKaomoji = [' :3', ' >w<', ' >_<', ' >_<;;', ' >.<', ' (๑╹ω╹๑ )', ' ^^', `>.<<~`, '<3', '(=^･ω･^=)'];
 var unsureList = ['um,, ', 'uhh.. ', 'ettooo,. ']; //response intros for other animals - anne <3
 var wonderlist = [`wo-wondahoyy..~`, `wonderhoy~!!`, `wondahoyyy!!! >_<`, `wonder... hoyyy!! >.<<~`, `wo-wonderhoy..?`, `minna~ isshonii ikuyo.. se~ no~ WONDAHOYYY~!!!`];
@@ -11,6 +12,29 @@ var wanMatch = [/^(w+o{2,}f+)/, /^(bark)+/, /^(ba+u+)/ , /^(a+r+f+)/, /^(w?r+u+f
 var yellingWanMatch = [/^(W+O{2,}F+)/, /^(BARK)+/, /^(BA+U+)/, /^(A+R+F+)/, /^(W?R+U+F+)/, /^(WAN)+\b/, /^(AWRU?F+)/, /^(B(W+)O{2,}F+)/, /^(W(R+)U+F+)/];
 var nyaMatch = [/^(m(r{2,})p)/, /^(m(e+)(o+)w)/, /^(p(u+)(r{2,}))/, /^(m(e+)(w+))/, /^(n(y+)(a+)+)/, /^((ps+))/, /^(m(i+)(a+)(u+))/, /^(m(y+)(a+)(u+))/];
 var yellingNyaMatch = [/^(M(R{2,})P)/, /^(M(E+)(O+)W)/, /^(P(U+)(R{2,}))/, /^(M(E+)(W+))/, /^(N(Y+)(A+))/, /^((PS+))/, /^(M(I+)(A+)(U+))/,  /^(M(Y+)(A+)(U+))/];
+
+
+
+
+
+function validArf(message) {
+	let meowBack = wanList[Math.floor(Math.random()*wanList.length)]; //random selection of meow, but is sometimes the same (i think its fine tho :3)
+
+	let randomAdditions = Math.random();
+	if (randomAdditions >= (2/3)) {
+		meowBack = meowBack+"~?";
+	} else if (randomAdditions <= (1/3)) {
+		meowBack = meowBack+"~";
+	}
+
+	if (randomAdditions >= 0.25) { //will add kaomoji 25% of the time
+		meowBack = meowBack+nyaKaomoji[Math.floor(Math.random()*nyaKaomoji.length)]
+	}
+
+	addToMeowDb(message.author.username, message.guild.name, message.createdTimestamp); //we wanna log meows :3 sends back all the info we need
+	return meowBack;	
+}
+	
 
 function validMeow(isOtherAnimal, message) {
 	let meowBack = nyaList[Math.floor(Math.random()*nyaList.length)]; //random selection of meow, but is sometimes the same (i think its fine tho :3)
@@ -54,7 +78,7 @@ function meowHandler(message) {
 	let wanArrayNum = 0;
 	while (wanArrayNum < wanMatch.length) {
 		if (wanMatch[wanArrayNum].test(meowMessage)) {
-			return message.channel.send("im,, not sure how to bark >.<,,");
+			return message.channel.send(validArf(message));
 		} else if (yellingWanMatch[wanArrayNum].test(meowMessage)){
 			return message.channel.send("too loud >.<,, a-and,, i-i'm not sure how to bark ><");
 		}
