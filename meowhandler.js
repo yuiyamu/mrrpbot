@@ -2,7 +2,7 @@ const { addToMeowDb } = require('./filemanagement.js');
 
 //these are a list of things the bot can respond with, not actually things that it's searching for. see regex expression below
 var nyaList = ['mrrp', 'mrrrp', 'mrrrrp', 'mrrrrrp', 'meow', 'nya', 'nyaa', 'nyaaa', 'mrow', 'mrrow', 'mrrrow', 'mrrrrow', 'mew', 'purr', 'purrr', 'purrrr', 'purrrrr', 'miau', 'miauu', 'myau', 'myauu']; 
-var wanList = ["woof","bark", "bau", "bau bau", "arf", "wruff", "wan", "awruff", "bwoof"];
+var wanList = ["woof","bark", "bau", "bau bau", "arf", "wruff", "wan", "awruff", "bwoof","ruff"];
 var nyaKaomoji = [' :3', ' >w<', ' >_<', ' >_<;;', ' >.<', ' (๑╹ω╹๑ )', ' ^^', `>.<<~`, '<3', '(=^･ω･^=)'];
 var unsureList = ['um,, ', 'uhh.. ', 'ettooo,. ']; //response intros for other animals - anne <3
 var wonderlist = [`wo-wondahoyy..~`, `wonderhoy~!!`, `wondahoyyy!!! >_<`, `wonder... hoyyy!! >.<<~`, `wo-wonderhoy..?`, `minna~ isshonii ikuyo.. se~ no~ WONDAHOYYY~!!!`];
@@ -80,7 +80,7 @@ function meowHandler(message) {
 		if (wanMatch[wanArrayNum].test(meowMessage)) {
 			return message.channel.send(validArf(message));
 		} else if (yellingWanMatch[wanArrayNum].test(meowMessage)){
-			return message.channel.send("too loud >.<,, a-and,, i-i'm not sure how to bark ><");
+			return message.channel.send("too loud >.<,,");
 		}
 		wanArrayNum++;
 	}
