@@ -46,11 +46,11 @@ async function storeServerMessages(curGuildId, guildName) {
 	console.log(`started caching messages from ${guildName} :0`);
 	const db = getMeowDb();
 	const insert = db.prepare(`
-		INSERT OR REPLACE INTO messages 
+		INSERT OR REPLACE INTO messages
 		(message_id, channel_id, guild_id, guild_name, author_id, content, attachment_url, fire_reacts, tomato_reacts, sob_reacts, created_at)
 		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 	`);
-	
+
 	let guildChannels = client.guilds.cache.get(curGuildId).channels.cache.values();
 	let guildChannelsArray = Array.from(guildChannels);
 	for (let i = 0; i < guildChannelsArray.length; i++) {
@@ -92,7 +92,7 @@ async function storeServerMessages(curGuildId, guildName) {
 						);
 					}
 				});
-				
+
 				transaction(messages);
 				console.log(`wrote ${messages.length} messages to ${channel.guild.name}'s #${channel.name} in database >w<`);
 			}
@@ -167,8 +167,9 @@ client.on(Events.MessageCreate, async message => {
 	}
 
 	//easter egg for may~
-	if (message.content.startsWith(`<@1340778139886031008> i love u`) || message.content.startsWith(`<@1340778139886031008> i love y`)) {
-		if (message.author.id === '1407800779275767920') {
+	//maymay + her alt
+	if (message.content.toLowerCase().startsWith(`<@1340778139886031008> i love u`) || message.content.toLowerCase().startsWith(`<@1340778139886031008> i love y`)) {
+		if (message.author.id === '1407800779275767920' || message.aurhor.id === '1504333514357608448') {
 			return message.channel.send('i-i.. i love you too mayow >.<;;;;');
 		} else {
 			return message.channel.send('i love you too,, but not as much as may >_<!!,,');
@@ -197,7 +198,7 @@ client.on(Events.MessageCreate, async message => {
 	if (message.content.startsWith('<@1340778139886031008>')) {
 	  //first, we wanna create a new thread - so she has all the possible context >.<
 		let pingMessage = message.content.split('>')[1];
-    	
+
 		if (message.channel.type === 0) { //normal text channel
       		let newMessageThread = await message.channel.threads.create({
         		name: pingMessage,
