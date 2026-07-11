@@ -168,8 +168,9 @@ client.on(Events.MessageCreate, async message => {
 
 	//easter egg for may~
 	//maymay + her alt
-	if (message.content.toLowerCase().startsWith(`<@1340778139886031008> i love u`) || message.content.toLowerCase().startsWith(`<@1340778139886031008> i love y`)) {
-		if (message.author.id === '1407800779275767920' || message.aurhor.id === '1504333514357608448') {
+	if (message.content.toLowerCase().startsWith(`<@1340778139886031008> i love u`) 
+		|| message.content.toLowerCase().startsWith(`<@1340778139886031008> i love y`)) {
+		if (message.author.id === '1407800779275767920' || message.author.id === '1504333514357608448') {
 			return message.channel.send('i-i.. i love you too mayow >.<;;;;');
 		} else {
 			return message.channel.send('i love you too,, but not as much as may >_<!!,,');
